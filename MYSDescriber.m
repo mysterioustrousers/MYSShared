@@ -13,6 +13,18 @@
 
 @implementation MYSDescriber
 
+#if IOS
++ (NSString *)describeView:(UIView *)view
+{
+    NSMutableString *description = [NSMutableString new];
+    [description appendFormat:@"<%@ %p>\n", NSStringFromClass([view class]), (void *)view];
+    [description appendFormat:@"frame: %@\n", NSStringFromCGRect(view.frame)];
+    [description appendFormat:@"bounds: %@\n", NSStringFromCGRect(view.bounds)];
+    [description appendFormat:@"alpha: %f\n", view.alpha];
+    [description appendFormat:@"hidden: %d\n", view.isHidden];
+    return description;
+}
+#else
 + (NSString *)describeView:(NSView *)view
 {
     NSMutableString *description = [NSMutableString new];
@@ -23,6 +35,7 @@
     [description appendFormat:@"hidden: %d\n", view.isHidden];
     return description;
 }
+#endif
 
 + (NSString *)describeObject:(id)object
 {

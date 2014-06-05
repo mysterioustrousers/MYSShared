@@ -14,3 +14,9 @@
 
 // Framework type
 #define IOS (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
+
+// iPad interface detection
+#if IOS
+    // check if device is iPad or iPhone/iPod Touch
+    #define PAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+#endif

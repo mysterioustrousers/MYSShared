@@ -11,6 +11,12 @@
 
 static NSCache *nibCache = nil;
 
+#if IOS
+#define MYSNib UINib
+#else
+#define MYSNib NSNib
+#endif
+
 
 @implementation MYSView (FromNib)
 
@@ -29,7 +35,11 @@ static NSCache *nibCache = nil;
             return [self viewFromNib:cachedNib];
         }
         else {
+#if IOS
+            UINib *nib = [UINib nibWithNibName:NSStringFromClass([self class]) bundle:nil];
+#else
             NSNib *nib = [[NSNib alloc] initWithNibNamed:NSStringFromClass([self class]) bundle:nil];
+#endif
             if (nib) {
                 [nibCache setObject:nib forKey:classNameString];
                 return [self viewFromNib:nib];
@@ -40,10 +50,14 @@ static NSCache *nibCache = nil;
     return nil;
 }
 
-+ (MYSView *)viewFromNib:(NSNib *)nib
++ (MYSView *)viewFromNib:(MYSNib *)nib
 {
     NSArray *nibObjects = nil;
+#if IOS
+    nibObjects = [nib instantiateWithOwner:nil options:0];
+#else
     [nib instantiateWithOwner:nil topLevelObjects:&nibObjects];
+#endif
     nibObjects = [nibObjects filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bindings) {
         return [obj isKindOfClass:[MYSView class]];
     }]];

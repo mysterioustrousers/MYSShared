@@ -6,11 +6,12 @@
 //  Copyright (c) 2013 Mysterious Trousers. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MYSSharedTypes.h"
+
 
 @interface MYSDescriber : NSObject
 
-+ (NSString *)describeView:(NSView *)view;
++ (NSString *)describeView:(MYSView *)view;
 
 + (NSString *)describeObject:(id)object;
 

@@ -10,5 +10,5 @@
 
 
 @interface MYSView (Gradient)
-- (void)drawGradientFromPoint:(NSPoint)point1 color:(MYSColor *)color1 toPoint:(NSPoint)point2 color:(MYSColor *)color2;
+- (void)drawGradientFromPoint:(CGPoint)point1 color:(MYSColor *)color1 toPoint:(CGPoint)point2 color:(MYSColor *)color2;
 @end
