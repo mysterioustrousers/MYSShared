@@ -19,10 +19,10 @@
     [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString] range:range];
 
     // make the text appear in blue
-    [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:range];
+//    [attrString addAttribute:NSForegroundColorAttributeName value:RGBHex(0xFF9E2C) range:range];
 
     // next make the text appear with an underline
-    [attrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlinePatternSolid] range:range];
+    [attrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:range];
 
     [attrString endEditing];
 
