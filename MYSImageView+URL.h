@@ -9,10 +9,11 @@
 #import "MYSSharedTypes.h"
 
 
+extern NSString * const MYSImageViewImageDidLoadFromURLNotification;
+
+
 @interface MYSImageView (URL)
 
 - (void)setImageWithContentsOfURL:(NSURL *)URL placeholder:(MYSImage *)placeholderImage;
-
-- (void)bindImageToKeyPath:(NSString *)keyPath object:(id)object;
 
 @end
