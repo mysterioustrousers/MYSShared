@@ -25,6 +25,11 @@ static char imageURLKey;
     return __cache;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)setImageWithContentsOfURL:(NSURL *)URL placeholder:(MYSImage *)placeholderImage
 {
     if (!URL) return;
