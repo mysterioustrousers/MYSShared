@@ -38,6 +38,12 @@ static char imageURLKey;
     if (placeholderImage) {
         [self setImage:placeholderImage];
     }
+    else {
+        MYSImage *defaultPlaceholder = [MYSImage imageNamed:@"icon_noavatar"];
+        if (defaultPlaceholder) {
+            [self setImage:defaultPlaceholder];
+        }
+    }
 
     // set the image url so we know what image, when loaded, should be set on this image view
     [self setImageURL:URL];
