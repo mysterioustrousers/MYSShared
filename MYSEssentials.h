@@ -18,3 +18,4 @@
 #import "MYSColor+RGBHex.h"
 #import "MYSView+FromNib.h"
 #import "MYSView+Gradient.h"
+#import "NSObject+Describe.h"

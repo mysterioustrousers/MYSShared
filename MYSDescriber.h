@@ -15,4 +15,6 @@
 
 + (NSString *)describeObject:(id)object;
 
++ (NSString *)describeObject:(id)object indent:(NSUInteger)level;
+
 @end
