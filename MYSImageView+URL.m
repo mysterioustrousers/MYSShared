@@ -12,6 +12,8 @@
 
 static char imageURLKey;
 
+static NSInteger maxAttemptCount = 3;
+
 
 @implementation MYSImageView (URL)
 
@@ -67,18 +69,10 @@ static char imageURLKey;
 
     // if it's nil, we need to be the instance that loads the image. We'll notify all other image views with this url when it's done.
     else {
-        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:URL]
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-        {
-            MYSImage *image = [[MYSImage alloc] initWithData:data];
-            if (image) {
-                [[[self class] sharedImageCache] setObject:image forKey:URL];
-                [[NSNotificationCenter defaultCenter] postNotificationName:MYSImageViewImageDidLoadFromURLNotification
-                                                                    object:URL
-                                                                  userInfo:@{ @"ImageKey" : image }];
-            }
-        }];
+        // mark that this URL has already started loading an image.
+        [[[self class] sharedImageCache] setObject:[NSNull null] forKey:URL];
+        // try to load the image 3 times before giving up.
+        [self loadImageAtURL:URL attemptCount:1];
     }
 }
 
@@ -105,7 +99,12 @@ static char imageURLKey;
 - (void)imageDidLoad:(NSNotification *)note
 {
     MYSImage *image = note.userInfo[@"ImageKey"];
-    [self setImage:image];
+    NSURL *imageURL = note.userInfo[@"ImageURL"];
+    // its possible that a second URL was set on this image view before the first URL finished loading it's image. If that's the case,
+    // don't set it as the image.
+    if ([[self imageURL] isEqual:imageURL]) {
+        [self setImage:image];
+    }
 }
 
 
@@ -119,6 +118,27 @@ static char imageURLKey;
                                              selector:@selector(imageDidLoad:)
                                                  name:MYSImageViewImageDidLoadFromURLNotification
                                                object:[self imageURL]];
+}
+
+- (void)loadImageAtURL:(NSURL *)URL attemptCount:(NSInteger)attemptCount
+{
+    if (attemptCount <= maxAttemptCount) {
+        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:URL]
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+         {
+             MYSImage *image = [[MYSImage alloc] initWithData:data];
+             if (image) {
+                 [[[self class] sharedImageCache] setObject:image forKey:URL];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:MYSImageViewImageDidLoadFromURLNotification
+                                                                     object:URL
+                                                                   userInfo:@{ @"ImageKey" : image, @"ImageURL" : URL }];
+             }
+             else {
+                 [self loadImageAtURL:URL attemptCount:attemptCount + 1];
+             }
+         }];
+    }
 }
 
 
